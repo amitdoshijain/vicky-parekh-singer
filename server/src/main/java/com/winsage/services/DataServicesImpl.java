@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.winsage.dao.DataDao;
 import com.winsage.model.BaseEntity;
-import com.winsage.model.User;
+import com.winsage.model.Products;
 
 public class DataServicesImpl implements DataServices {
 
@@ -19,13 +19,13 @@ public class DataServicesImpl implements DataServices {
 	}
 
 	@Override
-	public User getEntityById(long id) throws Exception {
+	public BaseEntity getEntityById(long id) throws Exception {
 		return dataDao.getEntityById(id);
 	}
 
 	@Override
-	public List<User> getEntityList() throws Exception {
-		return dataDao.getEntityList();
+	public List<Products> getEntityList() throws Exception {
+		return dataDao.getProducts();
 	}
 
 	@Override

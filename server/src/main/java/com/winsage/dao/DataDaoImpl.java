@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.winsage.model.BaseEntity;
+import com.winsage.model.Events;
 import com.winsage.model.Products;
 import com.winsage.model.User;
 
@@ -32,26 +33,26 @@ public class DataDaoImpl implements DataDao {
 	}
 
 	@Override
-	public User getEntityById(long id) throws Exception {
+	public Events getEntityById(long id) throws Exception {
 		session = sessionFactory.openSession();
-		User employee = (User) session.load(User.class,
+		Events product = (Events) session.load(Events.class,
 				new Long(id));
 		tx = session.getTransaction();
 		session.beginTransaction();
 		tx.commit();
-		return employee;
+		return product;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getEntityList() throws Exception {
+	public List<Products> getProducts() throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		List<User> employeeList = session.createCriteria(User.class)
+		List<Products> productList = session.createCriteria(Products.class)
 				.list();
 		tx.commit();
 		session.close();
-		return employeeList;
+		return productList;
 	}
 	
 	@Override

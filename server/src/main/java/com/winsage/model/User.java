@@ -13,7 +13,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @Entity
 @Table(name = "user")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class User implements Serializable {
+public class User extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 

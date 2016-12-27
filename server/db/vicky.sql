@@ -13,7 +13,7 @@ postedon DATE DEFAULT NULL ,
 PRIMARY KEY (id)
 );
 
-CREATE TABLE product (
+CREATE TABLE products (
 id int not NULL ,
 name LONG DEFAULT NULL ,
 description LONG DEFAULT NULL ,

@@ -12,28 +12,34 @@ import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "events")
+@Table(name = "products")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Events implements Serializable {
+public class Events extends BaseEntity  {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
-	private long id;
+	
 
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "cost")
-	private String cost;
-
-	@Column(name = "imageurl")
-	private String imageURL;
-
 	@Column(name = "description")
 	private String description;
+
+	@Column(name = "startDate")
+	private Date startDate;
+
+	@Column(name = "endDate")
+	private Date endDate;
+
+	@Column(name = "time")
+	private String time;
+
+	@Column(name = "location")
+	private String location;
+
+	@Column(name = "city")
+	private String city;
 
 	@Column(name = "deleted")
 	private Boolean deleted;
@@ -41,13 +47,6 @@ public class Events implements Serializable {
 	@Column(name = "updatedon")
 	private Date updatedOn;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -77,28 +76,52 @@ public class Events implements Serializable {
 		this.name = name;
 	}
 
-	public String getCost() {
-		return cost;
-	}
-
-	public void setCost(String cost) {
-		this.cost = cost;
-	}
-
-	public String getImageURL() {
-		return imageURL;
-	}
-
-	public void setImageURL(String imageURL) {
-		this.imageURL = imageURL;
-	}
-
 	public Date getUpdatedOn() {
 		return updatedOn;
 	}
 
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 }

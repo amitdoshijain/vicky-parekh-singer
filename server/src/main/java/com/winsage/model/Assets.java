@@ -14,14 +14,10 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @Entity
 @Table(name = "assets")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Assets implements Serializable {
+public class Assets extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
-	private long id;
 
 	@Column(name = "category")
 	private String category;
@@ -41,13 +37,7 @@ public class Assets implements Serializable {
 	@Column(name = "updatedon")
 	private Date updatedOn;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+	
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
