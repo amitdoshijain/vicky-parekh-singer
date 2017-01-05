@@ -1,0 +1,289 @@
+
+<script>
+	$(document)
+			.ready(
+					function($) {
+
+						$("#tabs").tabs();
+						var dialog, form,name = $( "#name" ),
+							description = $( "#description" ),
+							cost = $( "#cost" ),
+					      allFields = $( [] ).add( name ).add( description ).add( cost ),
+					      tips = $( ".validateTips" );
+
+						function updateTips(t) {
+							tips.text(t).addClass("ui-state-highlight");
+							setTimeout(function() {
+								tips.removeClass("ui-state-highlight", 1500);
+							}, 500);
+						}
+
+						function checkLength(o, n, min, max) {
+							if (o.val().length > max || o.val().length < min) {
+								o.addClass("ui-state-error");
+								updateTips("Length of " + n
+										+ " must be between " + min + " and "
+										+ max + ".");
+								return false;
+							} else {
+								return true;
+							}
+						}
+
+					
+						function addUser() {
+							var valid = true;
+							allFields.removeClass("ui-state-error");
+							alert(name);
+							valid = valid
+									&& checkLength(name, "name", 3, 50);
+							valid = valid && checkLength(description, "description", 6, 1000);
+							valid = valid
+									&& checkLength(cost, "cost", 5, 5);
+
+
+							if (valid) {
+								// alert("saving data....");
+									
+								 var jsonData = {};
+								 var formData = $("#theForm").serializeArray();
+								 $.each(formData, function() {
+									 if (jsonData[this.name]) {
+									 if (!jsonData[this.name].push) {
+									 jsonData[this.name] = [jsonData[this.name]];
+									 }
+									 jsonData[this.name].push(this.value || '');
+									 } else {
+									 jsonData[this.name] = this.value || '';
+									 }
+								 });
+									console.log(jsonData);
+								    $.ajax({
+								           type: "POST",
+								           url: '/api/product',
+								           contentType :"application/json",
+								           data:JSON.stringify(jsonData), // serializes the form's elements.
+								           success: function(data)
+								           {
+								        	 //  alert(data); // show response from the php script.
+								               $("#example tbody").append(
+														"<tr>" + "<td>" + name.val() + "</td>"
+																+ "<td>" + description.val()
+																+ "</td>" + "<td>"
+																+ cost.val() + "</td>"
+																+ "</tr>");
+												dialog.dialog("close");
+								           }
+								         });
+								
+							}
+							return valid;
+						}
+
+						dialog = $("#product-dialog-form").dialog({
+							autoOpen : false,
+							height : 400,
+							width : 350,
+							modal : true,
+							buttons : {
+								"Submit" : addUser,
+								Cancel : function() {
+									dialog.dialog("close");
+								}
+							},
+							close : function() {
+								form[0].reset();
+								allFields.removeClass("ui-state-error");
+							}
+						});
+						
+						form = dialog.find("form").on("submit",
+								function(event) {
+									event.preventDefault();
+									addUser();
+								});
+
+						$("#create-product").button().on("click", function() {
+							dialog.dialog("open");
+						});
+						
+						
+						
+						dialogEdit = $("#edit-product-dialog-form").dialog({
+							autoOpen : false,
+							height : 400,
+							width : 350,
+							modal : true,
+							buttons : {
+								"Submit" : addUser,
+								Cancel : function() {
+									dialog.dialog("close");
+								}
+							},
+							close : function() {
+								form[0].reset();
+								allFields.removeClass("ui-state-error");
+							}
+						});
+						
+						
+						$(".edit-product").button().on("click", function() {
+							dialogEdit.dialog("open");
+						});
+
+					});
+</script>
+<style>
+label, input {
+	display: block;
+}
+
+input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
+
+h1 {
+	font-size: 1.2em;
+	margin: .6em 0;
+}
+
+div#users-contain {
+	width: 350px;
+	margin: 20px 0;
+}
+
+div#users-contain table {
+	margin: 1em 0;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+div#users-contain table td, div#users-contain table th {
+	border: 1px solid #eee;
+	padding: .6em 10px;
+	text-align: left;
+}
+
+.ui-dialog .ui-state-error {
+	padding: .3em;
+}
+
+.validateTips {
+	border: 1px solid transparent;
+	padding: 0.3em;
+}
+</style>
+<div>
+	<p id="logout">
+		<a href="#!/login" class="btn btn-primary">Logout</a>
+	</p>
+
+
+	<div id="product-dialog-form" title="Create new user">
+		<p class="validateTips">All form fields are required.</p>
+
+		<form ng-submit="vm.saveProduct()" id="theForm">
+			<fieldset>
+				<label for="name">Name</label> <input type="text" name="name"
+					id="name" placeholder="Product Name"
+					class="text ui-widget-content ui-corner-all"> <label
+					for="description">Description</label> <textarea type="text" name="description"
+					id="description" placeholder="Enter Product description"
+					class="text ui-widget-content ui-corner-all"></textarea> <label
+					for="cost">Cost</label> <input type="text"
+					name="cost" id="cost" placeholder="1000"
+					class="text ui-widget-content ui-corner-all">
+
+				<!-- Allow form submission with keyboard without duplicating the dialog button -->
+				<input type="submit" tabindex="-1"
+					style="position: absolute; top: -1000px">
+			</fieldset>
+		</form>
+	</div>
+	<div id="edit-product-dialog-form" title="Create new user">
+		<p class="validateTips">All form fields are required.</p>
+
+		<form  id="editForm">
+			<fieldset>
+			<input type="hidden" name="id"
+					id="id" value="vm.id"
+					class="text ui-widget-content ui-corner-all"> 
+				<label for="name">Name</label> <input type="text" name="name"
+					id="name" ng-model="vm.editData.name"
+					class="text ui-widget-content ui-corner-all"> <label
+					for="description">Description</label> <textarea type="text" name="description"
+					id="description" ng-model="vm.editData.description"
+					class="text ui-widget-content ui-corner-all"></textarea> <label
+					for="cost">Cost</label> <input type="text"
+					name="cost" id="cost" ng-model="vm.editData.cost"
+					class="text ui-widget-content ui-corner-all">
+
+				<!-- Allow form submission with keyboard without duplicating the dialog button -->
+				<input type="submit" tabindex="-1"
+					style="position: absolute; top: -1000px">
+			</fieldset>
+		</form>
+	</div>
+
+	<div id="tabs">
+		<ul>
+			<li><a href="#tabs-1">Products</a></li>
+			<li><a href="#tabs-2">Events</a></li>
+			<li><a href="#tabs-3">Songs</a></li>
+			<li><a href="#tabs-4">Products Enquiry</a></li>
+		</ul>
+		<div id="tabs-1">
+			<p>
+				Product Details <br>
+				<button id="create-product">Add Product</button>
+			<table id="example" class="table table-striped table-bordered"
+				cellspacing="0" width="100%">
+				<thead>
+							<tr>
+								<th>Product Name</th>
+								<th>Product Description</th>
+								<th>Cost</th>
+								<th>Image</th>
+								<th>Updated on</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in vm.tableData">
+							
+								<td>{{data.name}}</td>
+								<td>{{data.description}}</td>
+								<td>{{data.cost}}</td>
+								<td>{{data.imageURL}}</td>
+								<td>{{data.updatedOn}}</td>
+								<th>{{data.deleted ? 'Disabled' : 'Enabled'}}</th>
+								<td><button  ng-click="vm.editProduct(data.id);" class="edit-product" id="{{data.id}}">Edit</button></td>
+							</tr>
+							
+						</tbody>
+					</table></p>
+			
+  </div>
+  <div id="tabs-2">
+    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+  </div>
+  <div id="tabs-3">
+    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+  </div>
+   <div id="tabs-4">
+    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+  </div>
+</div>
+</div>
+

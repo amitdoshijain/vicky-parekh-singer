@@ -11,6 +11,6 @@ public class HibernateAwareObjectMapper extends ObjectMapper {
         hm.configure(Hibernate4Module.Feature.FORCE_LAZY_LOADING, false);
         registerModule(hm);
         configure(SerializationFeature.INDENT_OUTPUT, true);
-    }
+    } 
 
 }

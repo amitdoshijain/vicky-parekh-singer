@@ -1,39 +1,36 @@
 package com.winsage.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "user")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@Table(name = "users")
+//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class User extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
-	private long id;
 
 	@Column(name = "password")
 	private String password;
 
 	@Column(name = "username")
 	private String username;
+	
+	@Column(name="sessionid")
+	private String sessionid;
 
-	public long getId() {
-		return id;
+	public User(){
+		
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public User(Long id,String password, String username, String sessionid) {
+		super(id);
+		this.password = password;
+		this.username = username;
+		this.sessionid = sessionid;
 	}
 
 	public String getPassword() {
@@ -54,6 +51,14 @@ public class User extends BaseEntity {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getSessionid() {
+		return sessionid;
+	}
+
+	public void setSessionid(String sessionid) {
+		this.sessionid = sessionid;
 	}
 
 }

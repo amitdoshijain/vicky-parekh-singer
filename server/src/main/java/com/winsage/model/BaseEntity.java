@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class BaseEntity implements Serializable{
-
+ 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
@@ -23,4 +23,15 @@ public class BaseEntity implements Serializable{
 	public void setId(long id) {
 		this.id = id;
 	}
+
+	public BaseEntity(Long id) {
+		super();
+		this.id = id;
+	}
+
+	public BaseEntity() {
+		super();
+	}
+	
+	
 }

@@ -15,7 +15,7 @@ public class Application {
 
         AnnotationMethodHandlerAdapter adapter = new AnnotationMethodHandlerAdapter();
         adapter.setMessageConverters(new HttpMessageConverter[] { converter });
-
+ 
         return adapter;
     }
 }
